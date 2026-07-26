@@ -14,6 +14,9 @@
         @auth
             <a href="{{ route('dashboard') }}">Dashboard</a>
             <a href="{{ route('licenses') }}">My Licenses</a>
+            @if (auth()->user()->role === 'admin')
+                <a href="{{ route('admin.dashboard') }}">Admin Panel</a>
+            @endif
             <form action="{{ route('logout') }}" method="POST" style="display:inline;">
                 @csrf
                 <button type="submit">Logout</button>

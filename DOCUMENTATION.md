@@ -16,6 +16,7 @@
 - [License System](#license-system)
 - [Download Page](#download-page)
 - [Version Checking](#version-checking)
+- [Admin Dashboard](#admin-dashboard)
 - [REST API](#rest-api)
 - [Queue & Job System](#queue--job-system)
 - [File Validation & Security](#file-validation--security)
@@ -587,6 +588,57 @@ Version::create([
 
 ---
 
+## Admin Dashboard
+
+Admin panel untuk mengelola seluruh sistem.
+
+**URL:** `/admin`
+
+**Login:** `admin@admin.com` / `password`
+
+### Access
+
+- Hanya user dengan role `admin` yang bisa mengakses
+- User biasa akan di-redirect ke `/dashboard`
+- Middleware: `EnsureUserIsAdmin`
+
+### Features
+
+| Page | URL | Description |
+|------|-----|-------------|
+| Dashboard | `/admin` | Stats overview (users, conversions, licenses, revenue) |
+| Users | `/admin/users` | List, search, filter, view detail, change role, delete |
+| Conversions | `/admin/conversions` | List, filter by status/category/date, view detail |
+| Licenses | `/admin/licenses` | List, filter, create manual license, view, delete |
+| Versions | `/admin/versions` | List, add, edit, delete versions per platform |
+| Settings | `/admin/settings` | Configure limits, temp file lifetime, system tools |
+
+### Default Admin Account
+
+```
+Email: admin@admin.com
+Password: password
+```
+
+### Adding Admin Role
+
+```php
+// Make a user admin
+$user = User::find(1);
+$user->update(['role' => 'admin']);
+
+// Check if user is admin
+if ($user->isAdmin()) {
+    // Show admin panel link
+}
+```
+
+### Navigation
+
+When logged in as admin, "Admin Panel" link appears in the main navigation.
+
+---
+
 ## REST API
 
 ### Base URL
@@ -672,6 +724,19 @@ php artisan queue:work --queue=conversions
 ---
 
 ## Database Schema
+
+### users
+
+| Column | Type |
+|--------|------|
+| id | bigint |
+| name | string |
+| email | string (unique) |
+| role | enum (user, admin) |
+| password | string |
+| remember_token | string (nullable) |
+| created_at | timestamp |
+| updated_at | timestamp |
 
 ### conversions
 
