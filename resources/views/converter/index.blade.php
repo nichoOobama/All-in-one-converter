@@ -142,26 +142,34 @@
 <!-- Tool Header -->
 <div class="mb-stack-lg text-center md:text-left">
 <h1 class="font-headline-lg text-headline-lg text-on-surface mb-stack-sm">Convert Your Files Here</h1>
-<p class="font-body-lg text-body-lg text-secondary max-w-2xl">Convert your documents to editable Microsoft Word files with high precision and layout preservation.</p>
+<p class="font-body-lg text-body-lg text-secondary max-w-2xl">Convert any file to your desired format with high precision and fast processing.</p>
 </div>
 <!-- Bento Layout Content -->
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
 <!-- Primary Action Area: Drop Zone -->
 <div class="lg:col-span-8 flex flex-col gap-gutter">
+<form action="{{ route('convert.store') }}" method="POST" enctype="multipart/form-data">
+    @csrf
 <div class="relative group bg-surface-container-lowest border-2 border-dashed border-outline-variant rounded-xl p-stack-lg min-h-[400px] flex flex-col items-center justify-center transition-all duration-300 hover:border-primary hover:bg-surface-container-low cursor-pointer" id="drop-zone">
-<div class="text-center">
+<div class="text-center" id="drop-zone-default">
 <div class="mb-stack-lg inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary-container/10 text-primary">
 <span class="material-symbols-outlined text-[48px]">upload_file</span>
 </div>
-<h2 class="font-headline-md text-headline-md text-on-surface mb-stack-sm">Drop PDF files here</h2>
-<p class="font-body-md text-body-md text-secondary mb-stack-lg">or click to select from your device</p>
-<button class="bg-primary text-on-primary px-10 py-4 rounded-lg font-headline-md text-body-md hover:shadow-lg transform transition-all active:scale-95">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-stack-sm">Drop your files here</h2>
+<p class="font-body-md text-body-md text-secondary">or click to select from your device.</p>
+<p class="font-body-md text-body-md text-secondary mb-stack-lg">Don't worry, you dont need to manually select the format category, we'll do it for you.</p>
+<button type="button" id="upload-btn" class="bg-primary text-on-primary px-10 py-4 rounded-lg font-headline-md text-body-md hover:shadow-lg transform transition-all active:scale-95">
                                 Upload Files
                             </button>
-<form action="{{ route('convert.store') }}" method="POST" enctype="multipart/form-data">
-    @csrf
 </div>
-<input class="absolute inset-0 opacity-0 cursor-pointer" type="file" required/>
+<div class="hidden text-center" id="drop-zone-preview">
+<span class="material-symbols-outlined text-[48px] text-primary mb-stack-sm" id="preview-icon">description</span>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-stack-sm" id="preview-filename"></h2>
+<p class="font-body-md text-body-md text-secondary mb-stack-sm" id="preview-size"></p>
+<p class="text-label-sm text-primary mb-stack-md" id="preview-category"></p>
+<button type="button" id="change-file-btn" class="text-primary font-label-md hover:underline">Change file</button>
+</div>
+<input type="file" name="file" id="file-input" class="absolute inset-0 opacity-0 cursor-pointer" required/>
 </div>
 <!-- Progress Section (Hidden by default, shown via JS simulation) -->
 <div class="hidden bg-white border border-outline-variant rounded-xl p-stack-lg shadow-sm" id="conversion-progress">
@@ -242,37 +250,37 @@
 <select name="target_format" id="target_format" required>
     <option value="">Select Format</option>
 
-    <optgroup label="Images">
+    <optgroup label="Images" data-category="image">
         @foreach ($formats['image'] ?? [] as $fmt)
             <option value="{{ $fmt }}">{{ strtoupper($fmt) }}</option>
         @endforeach
     </optgroup>
 
-    <optgroup label="Video">
+    <optgroup label="Video" data-category="video">
         @foreach ($formats['video'] ?? [] as $fmt)
             <option value="{{ $fmt }}">{{ strtoupper($fmt) }}</option>
         @endforeach
     </optgroup>
 
-    <optgroup label="Audio">
+    <optgroup label="Audio" data-category="audio">
         @foreach ($formats['audio'] ?? [] as $fmt)
             <option value="{{ $fmt }}">{{ strtoupper($fmt) }}</option>
         @endforeach
     </optgroup>
 
-    <optgroup label="Documents">
+    <optgroup label="Documents" data-category="document">
         @foreach ($formats['document'] ?? [] as $fmt)
             <option value="{{ $fmt }}">{{ strtoupper($fmt) }}</option>
         @endforeach
     </optgroup>
 
-    <optgroup label="Spreadsheets">
+    <optgroup label="Spreadsheets" data-category="spreadsheet">
         @foreach ($formats['spreadsheet'] ?? [] as $fmt)
             <option value="{{ $fmt }}">{{ strtoupper($fmt) }}</option>
         @endforeach
     </optgroup>
 
-    <optgroup label="Presentations">
+    <optgroup label="Presentations" data-category="presentation">
         @foreach ($formats['presentation'] ?? [] as $fmt)
             <option value="{{ $fmt }}">{{ strtoupper($fmt) }}</option>
         @endforeach
@@ -344,46 +352,120 @@
 </div>
 </footer>
 <script>
-        // Micro-interactions and simulation for conversion process
         const dropZone = document.getElementById('drop-zone');
-        const progressSection = document.getElementById('conversion-progress');
-        const progressBar = document.getElementById('progress-bar');
-        const progressPercent = document.getElementById('progress-percent');
-        const resultSection = document.getElementById('result-section');
-        const fileInput = dropZone.querySelector('input');
+        const fileInput = document.getElementById('file-input');
+        const uploadBtn = document.getElementById('upload-btn');
+        const changeFileBtn = document.getElementById('change-file-btn');
+        const defaultContent = document.getElementById('drop-zone-default');
+        const previewContent = document.getElementById('drop-zone-preview');
+        const previewFilename = document.getElementById('preview-filename');
+        const previewSize = document.getElementById('preview-size');
+        const previewCategory = document.getElementById('preview-category');
+        const previewIcon = document.getElementById('preview-icon');
+        const targetSelect = document.getElementById('target_format');
+
+        const categoryMap = {
+            'image/': 'image',
+            'video/': 'video',
+            'audio/': 'audio',
+        };
+
+        const categoryIcons = {
+            'image': 'image',
+            'video': 'videocam',
+            'audio': 'audio_file',
+            'document': 'description',
+            'spreadsheet': 'table_chart',
+            'presentation': 'slideshow',
+        };
+
+        const categoryLabels = {
+            'image': 'Image',
+            'video': 'Video',
+            'audio': 'Audio',
+            'document': 'Document',
+            'spreadsheet': 'Spreadsheet',
+            'presentation': 'Presentation',
+        };
+
+        function detectCategory(file) {
+            const mime = file.type || '';
+            for (const [prefix, category] of Object.entries(categoryMap)) {
+                if (mime.startsWith(prefix)) return category;
+            }
+            if (mime === 'application/pdf') return 'document';
+            if (mime.includes('officedocument.wordprocessingml') || mime.includes('msword')) return 'document';
+            if (mime.includes('officedocument.spreadsheetml') || mime.includes('ms-excel') || mime === 'text/csv') return 'spreadsheet';
+            if (mime.includes('officedocument.presentationml') || mime.includes('ms-powerpoint')) return 'presentation';
+            if (mime.includes('opendocument')) return 'document';
+            return 'document';
+        }
+
+        function formatSize(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / 1048576).toFixed(1) + ' MB';
+        }
+
+        function filterFormats(category) {
+            targetSelect.querySelectorAll('optgroup').forEach(optgroup => {
+                if (optgroup.dataset.category === category) {
+                    optgroup.style.display = '';
+                } else {
+                    optgroup.style.display = 'none';
+                }
+            });
+            targetSelect.value = '';
+        }
+
+        function showPreview(file) {
+            const category = detectCategory(file);
+            previewFilename.textContent = file.name;
+            previewSize.textContent = formatSize(file.size);
+            previewCategory.textContent = (categoryLabels[category] || category) + ' file';
+            previewIcon.textContent = categoryIcons[category] || 'description';
+            defaultContent.classList.add('hidden');
+            previewContent.classList.remove('hidden');
+            dropZone.style.cursor = 'default';
+            filterFormats(category);
+        }
+
+        function resetDropZone() {
+            fileInput.value = '';
+            defaultContent.classList.remove('hidden');
+            previewContent.classList.add('hidden');
+            dropZone.style.cursor = 'pointer';
+            targetSelect.querySelectorAll('optgroup').forEach(g => g.style.display = '');
+            targetSelect.value = '';
+        }
+
+        uploadBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            fileInput.click();
+        });
+
+        changeFileBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            fileInput.click();
+        });
 
         fileInput.addEventListener('change', () => {
             if (fileInput.files.length > 0) {
-                simulateConversion();
+                showPreview(fileInput.files[0]);
             }
         });
 
-        function simulateConversion() {
-            dropZone.classList.add('hidden');
-            progressSection.classList.remove('hidden');
-            
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += Math.random() * 15;
-                if (progress > 100) progress = 100;
-                
-                progressBar.style.width = `${progress}%`;
-                progressPercent.innerText = `${Math.floor(progress)}%`;
+        dropZone.addEventListener('click', (e) => {
+            if (e.target === dropZone || e.target.closest('#drop-zone-default')) {
+                if (!previewContent.classList.contains('hidden')) return;
+                fileInput.click();
+            }
+        });
 
-                if (progress === 100) {
-                    clearInterval(interval);
-                    setTimeout(() => {
-                        progressSection.classList.add('hidden');
-                        resultSection.classList.remove('hidden');
-                    }, 500);
-                }
-            }, 300);
-        }
-
-        // Drag and drop visual state
         ['dragenter', 'dragover'].forEach(eventName => {
             dropZone.addEventListener(eventName, e => {
                 e.preventDefault();
+                e.stopPropagation();
                 dropZone.classList.add('drop-zone-active');
             }, false);
         });
@@ -391,15 +473,18 @@
         ['dragleave', 'drop'].forEach(eventName => {
             dropZone.addEventListener(eventName, e => {
                 e.preventDefault();
+                e.stopPropagation();
                 dropZone.classList.remove('drop-zone-active');
             }, false);
         });
 
         dropZone.addEventListener('drop', e => {
-            const dt = e.dataTransfer;
-            const files = dt.files;
+            const files = e.dataTransfer.files;
             if (files.length > 0) {
-                simulateConversion();
+                const dt = new DataTransfer();
+                dt.items.add(files[0]);
+                fileInput.files = dt.files;
+                showPreview(files[0]);
             }
         });
     </script>
