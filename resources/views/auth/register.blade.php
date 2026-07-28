@@ -6,7 +6,14 @@
 <!-- Header / Brand Section -->
 <header class="w-full flex justify-between items-center px-margin-desktop max-w-container-max mx-auto h-16">
 <div class="text-headline-md font-headline-md font-extrabold text-primary">All In One Converter</div>
-<a class="font-label-md text-label-md text-primary hover:bg-surface-container-low transition-colors duration-200 px-4 py-2 rounded-lg" href="{{ route('login') }}">Login</a>
+<div class="flex items-center gap-stack-md">
+<a href="{{route('login')}}" class="bg-primary text-on-primary px-stack-lg py-2 rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity">
+Login
+</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-200" href="{{route('home')}}">
+                Back to Home
+            </a>
+</div>
 </header>
 <!-- Main Registration Section -->
 <main class="flex-grow flex items-center justify-center px-margin-mobile md:px-0 py-stack-lg relative overflow-hidden">

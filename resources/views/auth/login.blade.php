@@ -9,7 +9,7 @@
 <div class="text-headline-md font-headline-md font-extrabold text-primary">
                 All In One Converter
             </div>
-<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-200" href="#">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-primary transition-colors duration-200" href="{{route('home')}}">
                 Back to Home
             </a>
 </div>
