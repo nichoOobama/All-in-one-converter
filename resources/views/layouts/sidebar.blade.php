@@ -6,9 +6,12 @@
 <span class="font-label-md text-label-md">Profile</span>
 </a>
 <hr class="my-stack-sm border-outline-variant"/>
-<a class="flex items-center gap-stack-sm p-stack-sm rounded-lg text-error hover:bg-error-container transition-all" href="#">
+<form action="{{route('logout')}}" method="post">
+    @csrf
+<button class="pt-2 flex items-center gap-stack-sm p-stack-sm rounded-lg text-error hover:bg-error-container transition-all" type="submit">
 <span class="material-symbols-outlined">logout</span>
 <span class="font-label-md text-label-md">Logout</span>
-</a>
+</button>
+</form>
 </div>
 </aside>

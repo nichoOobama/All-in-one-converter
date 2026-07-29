@@ -3,16 +3,13 @@
 @section('title', 'My Licenses')
 
 @section('content')
-<h1>My Licenses</h1>
-
-<a href="{{ route('pricing') }}">Buy New License</a>
-
-<hr>
+<main class=" flex max-w-container-max w-full mx-auto px-margin-desktop py-stack-lg gap-2">
+    <h1>My Licenses</h1>
 
 @if ($licenses->isEmpty())
     <p>You don't have any licenses yet.</p>
     <a href="{{ route('pricing') }}">
-        <button type="button">Buy Your First License</button>
+        <button type="button" class="text-on-primary-fixed-variant hover:underline">Buy Your First License</button>
     </a>
 @else
     <table border="1" cellpadding="8" cellspacing="0">
@@ -48,4 +45,5 @@
         </tbody>
     </table>
 @endif
+</main>
 @endsection

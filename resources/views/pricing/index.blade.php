@@ -43,81 +43,82 @@
 <span class="material-symbols-outlined text-primary text-[20px]" data-icon="check_circle">check_circle</span>
                         Standard conversion speed
                     </li>
-<li class="flex items-start gap-stack-sm font-body-sm text-body-sm text-secondary opacity-50">
-<span class="material-symbols-outlined text-[20px]" data-icon="cancel">cancel</span>
-                        No OCR Support
-                    </li>
 </ul>
+<a href="{{route('convert.index')}}">
 <button class="w-full py-3 rounded-lg border border-primary text-primary font-label-md text-label-md hover:bg-primary-container hover:text-white transition-all">Get Started</button>
+</a>
 </div>
 <!-- Pro Plan (Highlighted) -->
 <div class="pricing-card bg-surface-container-lowest border-2 border-primary rounded-xl p-stack-lg flex flex-col relative">
 <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-white px-4 py-1 rounded-full text-label-sm font-label-sm">Most Popular</div>
 <div class="mb-stack-md">
-<h3 class="font-headline-md text-headline-md text-on-surface">Pro</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant">For power users and freelancers</p>
+<h3 class="font-headline-md text-headline-md text-on-surface">Single Purchase</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">One-time payment. Lifetime access.</p>
 </div>
 <div class="mb-stack-lg">
-<span class="font-display text-display text-on-surface price-val" data-annual="9" data-monthly="12">$12</span>
-<span class="font-label-md text-label-md text-secondary">/ month</span>
+<span class="font-display text-display text-on-surface price-val" data-annual="9" data-monthly="12">$9.99</span>
 </div>
 <ul class="flex-grow space-y-stack-sm mb-stack-lg">
 <li class="flex items-start gap-stack-sm font-body-sm text-body-sm text-on-surface">
 <span class="material-symbols-outlined text-primary text-[20px]" data-icon="check_circle">check_circle</span>
-                        Unlimited daily conversions
+                Unlimited Conversions
                     </li>
 <li class="flex items-start gap-stack-sm font-body-sm text-body-sm text-on-surface">
 <span class="material-symbols-outlined text-primary text-[20px]" data-icon="check_circle">check_circle</span>
-                        2GB max file size
+                       All file formats supported
                     </li>
 <li class="flex items-start gap-stack-sm font-body-sm text-body-sm text-on-surface">
 <span class="material-symbols-outlined text-primary text-[20px]" data-icon="check_circle">check_circle</span>
-                        High-priority processing
+                        Batch processing
                     </li>
 <li class="flex items-start gap-stack-sm font-body-sm text-body-sm text-on-surface">
 <span class="material-symbols-outlined text-primary text-[20px]" data-icon="check_circle">check_circle</span>
-                        Advanced OCR Support
+                       Free updates
                     </li>
 <li class="flex items-start gap-stack-sm font-body-sm text-body-sm text-on-surface">
 <span class="material-symbols-outlined text-primary text-[20px]" data-icon="check_circle">check_circle</span>
-                        100GB Cloud Storage
+                        One device only
                     </li>
 </ul>
-<button class="w-full py-3 rounded-lg bg-primary text-white font-label-md text-label-md hover:opacity-90 shadow-sm transition-all">Go Pro Now</button>
+<a href="{{ route('checkout', 'single') }}">
+<button class="w-full py-3 rounded-lg bg-primary text-white font-label-md text-label-md hover:opacity-90 shadow-sm transition-all">Buy Now</button>
+</a>
 </div>
 <!-- Enterprise Plan -->
 <div class="pricing-card bg-surface-container-lowest border border-outline-variant rounded-xl p-stack-lg flex flex-col">
 <div class="mb-stack-md">
-<h3 class="font-headline-md text-headline-md text-on-surface">Enterprise</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant">Custom solutions for large teams</p>
+<h3 class="font-headline-md text-headline-md text-on-surface">Subscription</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Monthly subscription. Cancel anytime.</p>
 </div>
 <div class="mb-stack-lg">
-<span class="font-display text-display text-on-surface price-val" data-annual="39" data-monthly="49">$49</span>
+<span class="font-display text-display text-on-surface price-val" data-annual="39" data-monthly="49">$4.99</span>
 <span class="font-label-md text-label-md text-secondary">/ month</span>
 </div>
 <ul class="flex-grow space-y-stack-sm mb-stack-lg">
 <li class="flex items-start gap-stack-sm font-body-sm text-body-sm text-on-surface">
 <span class="material-symbols-outlined text-primary text-[20px]" data-icon="check_circle">check_circle</span>
-                        Everything in Pro plan
+                        Everything in Single Purchase
                     </li>
 <li class="flex items-start gap-stack-sm font-body-sm text-body-sm text-on-surface">
 <span class="material-symbols-outlined text-primary text-[20px]" data-icon="check_circle">check_circle</span>
-                        API Access for automation
+                        Multi-device support (up to 3 devices)
                     </li>
 <li class="flex items-start gap-stack-sm font-body-sm text-body-sm text-on-surface">
 <span class="material-symbols-outlined text-primary text-[20px]" data-icon="check_circle">check_circle</span>
-                        SSO &amp; User management
+                        Priority support
                     </li>
 <li class="flex items-start gap-stack-sm font-body-sm text-body-sm text-on-surface">
 <span class="material-symbols-outlined text-primary text-[20px]" data-icon="check_circle">check_circle</span>
-                        Unlimited Cloud Storage
+                        Early access to new features
                     </li>
 <li class="flex items-start gap-stack-sm font-body-sm text-body-sm text-on-surface">
 <span class="material-symbols-outlined text-primary text-[20px]" data-icon="check_circle">check_circle</span>
-                        24/7 Dedicated Support
+                        Cloud sync (coming soon)
                     </li>
 </ul>
-<button class="w-full py-3 rounded-lg border border-secondary text-secondary font-label-md text-label-md hover:bg-secondary-container transition-all">Contact Sales</button>
+<a href="{{ route('checkout', 'subscription') }}">
+    <button class="w-full py-3 rounded-lg border border-secondary text-secondary font-label-md text-label-md hover:bg-primary-container hover:text-white transition-all">Subscribe Now</button>
+</a>
 </div>
 </div>
 <!-- Features Comparison Table -->

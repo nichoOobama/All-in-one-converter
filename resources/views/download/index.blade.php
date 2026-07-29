@@ -16,10 +16,10 @@
                     Experience the power of All In One Converter on your desktop and mobile. Fast, offline-ready, and seamlessly integrated into your workflow.
                 </p>
 <div class="flex flex-wrap gap-gutter pt-4">
-<a class="bg-primary text-on-primary px-8 py-4 rounded-lg font-label-md text-label-md flex items-center shadow-lg hover:opacity-90 transition-all" href="#desktop">
+<a class="bg-primary text-on-primary px-8 py-4 rounded-lg font-label-md text-label-md flex items-center shadow-lg hover:opacity-90 transition-all" href="/downloads/windows/setup.exe">
 <span class="material-symbols-outlined mr-2">desktop_windows</span> Download for Windows
                     </a>
-<a class="border border-outline text-on-surface px-8 py-4 rounded-lg font-label-md text-label-md flex items-center hover:bg-surface-variant transition-all" href="#mobile">
+<a class="border border-outline text-on-surface px-8 py-4 rounded-lg font-label-md text-label-md flex items-center hover:bg-surface-variant transition-all" href="/downloads/android/app.apk">
 <span class="material-symbols-outlined mr-2">smartphone</span> Mobile Apps
                     </a>
 </div>
@@ -98,31 +98,10 @@
 <div class="flex-grow space-y-2 text-center md:text-left">
 <h3 class="font-headline-md text-headline-md">Windows</h3>
 <p class="font-body-sm text-body-sm text-on-surface-variant">Compatible with Windows 10 &amp; 11 (64-bit). MSI Installer available for enterprise deployment.</p>
-<div class="pt-4 flex flex-col sm:flex-row gap-stack-sm">
-<button class="bg-primary text-on-primary px-6 py-2 rounded font-label-md text-label-md flex items-center justify-center">
+<div class="pt-4 flex flex-col sm:flex-row">
+<a href="/downloads/windows/setup.exe" class="bg-primary text-on-primary px-6 py-2 rounded font-label-md text-label-md flex items-center justify-center">
 <span class="material-symbols-outlined mr-2">download</span> Download .exe
-                            </button>
-<button class="border border-outline text-on-surface px-6 py-2 rounded font-label-md text-label-md hover:bg-surface-variant transition-colors">
-                                Portable Version
-                            </button>
-</div>
-</div>
-</div>
-<!-- macOS Card -->
-<div class="ambient-shadow border border-outline-variant rounded-xl p-8 bg-white flex flex-col md:flex-row gap-8 items-center hover:shadow-md transition-shadow">
-<div class="w-24 h-24 flex-shrink-0 bg-surface-container flex items-center justify-center rounded-2xl">
-<img alt="macOS Logo" class="w-12 h-12" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbn4UiJ-kVr2VRfmBxGkg-Gf6c-nMgyTHvqHgvc27MTMYn87Is3W3Fe_ZfVx25cs_ZHXDFppOrIzEk_6gt4I5HTdKivroBbyNHGdB8tSik9fzjrj8fmL4Msu44DlVBkRb4mger-h12T-mhHi_ZAsB834vgp4W8JJ0D7w4PQkOGjTMECi-4u3YOt6UHmPePx3zpnAeXKB-b40UkYsylzWbFcY9IHTayrVXalMDgtyKww0zLFrfHr-D1"/>
-</div>
-<div class="flex-grow space-y-2 text-center md:text-left">
-<h3 class="font-headline-md text-headline-md">macOS</h3>
-<p class="font-body-sm text-body-sm text-on-surface-variant">Optimized for Apple Silicon (M1/M2/M3) and Intel Macs. Universal Binary included.</p>
-<div class="pt-4 flex flex-col sm:flex-row gap-stack-sm">
-<button class="bg-primary text-on-primary px-6 py-2 rounded font-label-md text-label-md flex items-center justify-center">
-<span class="material-symbols-outlined mr-2">download</span> Download .dmg
-                            </button>
-<button class="border border-outline text-on-surface px-6 py-2 rounded font-label-md text-label-md hover:bg-surface-variant transition-colors">
-                                App Store
-                            </button>
+                            </a>
 </div>
 </div>
 </div>
@@ -201,7 +180,7 @@
     <li>Lightweight and fast</li>
 </ul>
 
-<a href="/downloads/android/app.apk">
+<a href="">
     <button type="button">Download APK for Android</button>
 </a>
 

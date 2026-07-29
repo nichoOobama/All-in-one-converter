@@ -120,6 +120,17 @@
     </style>
 </head>
 <body class="bg-background text-on-surface min-h-screen flex flex-col">
+    @if ($errors->any())
+        <div style="border: 1px solid red; padding: 10px; margin-bottom 20px;">
+            <strong>Errors:</strong>
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
  <!-- TopNavBar -->
 <header class="bg-surface-container-lowest w-full h-16 border-b border-outline-variant shadow-sm z-50">
 <div class="flex justify-between items-center px-margin-desktop max-w-container-max mx-auto h-full">
@@ -132,9 +143,9 @@
 <a class="font-label-md text-label-md text-primary border-b-2 border-primary pb-1" href="{{route('dashboard')}}">Dashboard</a>
 </nav>
 <div class="flex items-center gap-stack-md">
-<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-label-md text-label-md hover:opacity-80 transition-opacity">
-                    Buy License
-                </button>
+<a href="{{route('pricing')}}" class="bg-primary text-on-primary px-6 py-2 rounded-lg font-label-md text-label-md hover:opacity-80 transition-opacity">
+    Buy License
+</a>
 </div>
 </div>
 </header>
@@ -152,6 +163,13 @@
                 link.classList.add('bg-primary-container', 'text-on-primary-container');
             });
         });
+
+        const file_input = document.getElementById('file-input');
+        const drop_zone = document.getElementById('drop-zone-default');
+        if (file_input.length > 0) {
+            drop_zone.remove();
+            file_input.classList.remove('absolute');
+        }
     </script>
 </body></html>
 
