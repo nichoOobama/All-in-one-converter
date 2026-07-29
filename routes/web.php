@@ -16,8 +16,11 @@ use App\Http\Middleware\RedirectIfAuthenticated;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return redirect()->route('convert.index');
-});
+    return view('index');
+})->name('home')
+
+
+');
 
 Route::get('/convert', [ConversionController::class, 'index'])->name('convert.index');
 Route::post('/convert', [ConversionController::class, 'store'])->name('convert.store');
