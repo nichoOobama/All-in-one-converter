@@ -17,10 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('index');
-})->name('home')
-
-
-');
+})->name('home');
 
 Route::get('/convert', [ConversionController::class, 'index'])->name('convert.index');
 Route::post('/convert', [ConversionController::class, 'store'])->name('convert.store');
@@ -48,7 +45,6 @@ Route::middleware(EnsureUserLoggedIn::class)->group(function () {
         $licenses = $user->licenses()->latest()->get();
         return view('dashboard.index', compact('licenses'));
     })->name('dashboard');
-
 
     Route::get('/licenses', [LicenseController::class, 'index'])->name('licenses');
     Route::get('/licenses/{license:license_key}', [LicenseController::class, 'show'])->name('licenses.show');
