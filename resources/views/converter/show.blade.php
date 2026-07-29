@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Conversion Status - All-in-One Converter</title>
-    <meta name="refresh" content="{{ $conversion->isProcessing() || $conversion->isPending() ? '3 : 0' }}">
+    <meta http-equiv="refresh" content="{{ $conversion->isProcessing() || $conversion->isPending() ? '3' : '0' }}">
 </head>
 <body>
     <h1>Conversion Status</h1>
