@@ -163,13 +163,6 @@
                 link.classList.add('bg-primary-container', 'text-on-primary-container');
             });
         });
-
-        const file_input = document.getElementById('file-input');
-        const drop_zone = document.getElementById('drop-zone-default');
-        if (file_input.length > 0) {
-            drop_zone.remove();
-            file_input.classList.remove('absolute');
-        }
     </script>
 </body></html>
 

@@ -1,6 +1,138 @@
 @extends(Auth::check() ? 'layouts.app' : 'layouts.landing')
 
 @section('content')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const defaultView = document.getElementById('drop-zone-default');
+        const previewView = document.getElementById('drop-zone-preview');
+        const previewFilename = document.getElementById('preview-filename');
+        const previewSize = document.getElementById('preview-size');
+        const previewCategory = document.getElementById('preview-category');
+        const previewIcon = document.getElementById('preview-icon');
+        const changeFileBtn = document.getElementById('change-file-btn');
+        const formatSelect = document.getElementById('target_format');
+
+        if (!dropZone || !fileInput || !defaultView || !previewView) return;
+
+        const allFormatGroups = Array.from(document.querySelectorAll('#target_format optgroup'));
+        const placeholderOption = '<option value="">Select Format</option>';
+
+        function filterFormats(category) {
+            formatSelect.innerHTML = placeholderOption;
+            allFormatGroups.forEach(group => {
+                if (!category || group.dataset.category === category) {
+                    formatSelect.appendChild(group.cloneNode(true));
+                }
+            });
+        }
+
+        const categoryByExt = {};
+        document.querySelectorAll('#target_format optgroup').forEach(group => {
+            const category = group.dataset.category;
+            group.querySelectorAll('option').forEach(option => {
+                categoryByExt[option.value.toLowerCase()] = category;
+            });
+        });
+
+        const categoryLabels = {
+            image: 'Image', video: 'Video', audio: 'Audio', document: 'Document',
+            spreadsheet: 'Spreadsheet', presentation: 'Presentation'
+        };
+
+        const categoryIcons = {
+            image: 'image', video: 'movie', audio: 'music_note',
+            document: 'description', spreadsheet: 'table_chart', presentation: 'slideshow'
+        };
+
+        function formatSize(bytes) {
+            if (!bytes) return '0 B';
+            const units = ['B', 'KB', 'MB', 'GB', 'TB'];
+            let i = 0;
+            while (bytes >= 1024 && i < units.length - 1) { bytes /= 1024; i++; }
+            return bytes.toFixed(i === 0 ? 0 : 1) + ' ' + units[i];
+        }
+
+        function getCategory(ext) {
+            return categoryByExt[ext.toLowerCase()] || null;
+        }
+
+        function showPreview(file) {
+            if (!file) return;
+            previewFilename.textContent = file.name;
+            previewSize.textContent = formatSize(file.size);
+            const ext = file.name.split('.').pop();
+            const category = getCategory(ext);
+            previewCategory.textContent = category
+                ? categoryLabels[category] + ' file detected — we\u2019ll convert automatically'
+                : 'Format not recognized — pick a target manually';
+            previewIcon.textContent = category ? categoryIcons[category] : 'description';
+            filterFormats(category);
+            formatSelect.value = '';
+            defaultView.classList.add('hidden');
+            previewView.classList.remove('hidden');
+            dropZone.classList.add('border-primary', 'bg-primary-container/5');
+        }
+
+        function resetView() {
+            fileInput.value = '';
+            filterFormats(null);
+            formatSelect.value = '';
+            defaultView.classList.remove('hidden');
+            previewView.classList.add('hidden');
+            dropZone.classList.remove('border-primary', 'bg-primary-container/5');
+        }
+
+        fileInput.addEventListener('change', function () {
+            if (fileInput.files && fileInput.files.length > 0) {
+                showPreview(fileInput.files[0]);
+            }
+        });
+
+        changeFileBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            resetView();
+            fileInput.click();
+        });
+
+        let dragDepth = 0;
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, e => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (eventName === 'dragenter') dragDepth++;
+                dropZone.classList.add('border-primary', 'bg-primary-container/5');
+            });
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, e => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (eventName === 'dragleave' && --dragDepth <= 0) {
+                    dragDepth = 0;
+                    dropZone.classList.remove('border-primary', 'bg-primary-container/5');
+                }
+                if (eventName === 'drop') {
+                    dragDepth = 0;
+                    dropZone.classList.remove('border-primary', 'bg-primary-container/5');
+                }
+            });
+        });
+
+        dropZone.addEventListener('drop', e => {
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                showPreview(files[0]);
+            }
+        });
+
+        document.addEventListener('dragover', e => e.preventDefault());
+        document.addEventListener('drop', e => e.preventDefault());
+    });
+</script>
 <!-- Main Content Canvas -->
 <main class="flex-grow flex flex-col items-center py-stack-lg px-margin-mobile md:px-margin-desktop">
 <div class="max-w-container-max w-full">
@@ -28,11 +160,14 @@
                             </button>
 </div>
 <div class="hidden text-center" id="drop-zone-preview">
+<div class="absolute top-4 right-4 w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+</div>
 <span class="material-symbols-outlined text-[48px] text-primary mb-stack-sm" id="preview-icon">description</span>
 <h2 class="font-headline-md text-headline-md text-on-surface mb-stack-sm" id="preview-filename"></h2>
 <p class="font-body-md text-body-md text-secondary mb-stack-sm" id="preview-size"></p>
 <p class="text-label-sm text-primary mb-stack-md" id="preview-category"></p>
-<button type="button" id="change-file-btn" class="text-primary font-label-md hover:underline">Change file</button>
+<button type="button" id="change-file-btn" class="relative z-10 text-primary font-label-md hover:underline">Change file</button>
 </div>
 <input type="file" name="file" id="file-input" class="absolute inset-0 opacity-0 cursor-pointer" required/>
 </div>
