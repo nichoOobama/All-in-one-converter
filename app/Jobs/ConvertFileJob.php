@@ -47,6 +47,9 @@ class ConvertFileJob implements ShouldQueue
             $category = \App\Enums\FileCategory::from($conversion->category);
             $converter = $registry->resolve($category);
 
+            $sourceFullPath = \Illuminate\Support\Facades\Storage::disk(config('converter.temp_disk'))
+                ->path($this->sourcePath);
+
             $outputDir = $tempManager->getOutputDir($conversion->id);
             $fullOutputDir = storage_path('app/' . $outputDir);
 
@@ -56,7 +59,7 @@ class ConvertFileJob implements ShouldQueue
 
             $dto = new \App\DTOs\ConversionRequest(
                 file: new \Illuminate\Http\UploadedFile(
-                    $this->sourcePath,
+                    $sourceFullPath,
                     $conversion->source_filename,
                     $conversion->source_mime_type,
                     null,
@@ -68,7 +71,7 @@ class ConvertFileJob implements ShouldQueue
                 options: $conversion->options ?? [],
             );
 
-            $result = $converter->convert($dto, $this->sourcePath, $fullOutputDir);
+            $result = $converter->convert($dto, $sourceFullPath, $fullOutputDir);
 
             $outputRelativePath = $outputDir . '/' . $result->outputFilename;
 
