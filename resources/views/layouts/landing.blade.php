@@ -147,4 +147,5 @@
 </header>
 @yield('content')
 @include('footer.index')
+@stack('script')
 </body></html>
