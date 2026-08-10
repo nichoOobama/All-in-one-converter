@@ -16,9 +16,9 @@ return array (
   ),
   'drivers' => 
   array (
-    'ffmpeg' => 'ffmpeg',
-    'ffprobe' => 'ffprobe',
-    'libreoffice' => '/usr/bin/soffice',
+    'ffmpeg' => env('FFMPEG_PATH', 'ffmpeg'),
+    'ffprobe' => env('FFPROBE_PATH', 'ffprobe'),
+    'libreoffice' => env('LIBREOFFICE_PATH', '/usr/bin/soffice'),
     'ghostscript' => 'gs',
   ),
   'formats' => 
