@@ -28,11 +28,6 @@ Login
 <h1 class="font-headline-lg text-headline-lg text-on-surface mb-2">Create Account</h1>
 <p class="font-body-md text-body-md text-on-surface-variant">Join thousands of users converting files daily with precision and speed.</p>
 </div>
-<!-- Social Register Option -->
-<button class="w-full flex items-center justify-center gap-stack-sm py-3 px-gutter border border-outline-variant rounded-lg font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-all duration-200 mb-6">
-<img alt="Google Logo" class="w-5 h-5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8U3TCC2y5Wn9pjnj9qc29TBsA5RVwEALQ12kuDQVPIOv7m5dKdw-jXCzzeWpoZGYymal9BYLwS5WhrJ66Vz6ZgaPhtg7equKZ05VXZqwSYEcah52nHZZCC_pznjLgSj-7kkhkuElOTJo0Y3bIxIjkVr825PvwvSCxpkNAdZS-Qmce0BZgzcWZl0-friUr_yYz-gIRv0hPyR5P8T7hslWUKmqvrNFTFHknp6B1Vs0CLJFBm8OWvqAjt8C3pZ4RDsa2F_17zkEv5u4"/>
-                Sign up with Google
-            </button>
 <div class="relative flex items-center mb-6">
 <div class="flex-grow border-t border-outline-variant"></div>
 <span class="flex-shrink mx-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Or continue with email</span>
