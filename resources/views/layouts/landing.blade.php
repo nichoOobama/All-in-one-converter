@@ -135,9 +135,20 @@
 <div class="flex justify-between items-center px-margin-desktop max-w-container-max mx-auto h-full">
 <div class="text-headline-md font-headline-md font-bold text-primary">All In One Converter</div>
 <nav class="hidden md:flex items-center gap-gutter">
-<a class="font-label-md text-label-md text-secondary hover:text-primary transition-colors duration-200" href="{{route('home')}}">Home</a>
-<a class="font-label-md text-label-md text-secondary hover:text-primary transition-colors duration-200" href="{{route('download')}}">Download Apps</a>
-<a class="font-label-md text-label-md text-secondary hover:text-primary transition-colors duration-200" href="{{route('pricing')}}">Pricing</a>
+    <a href="{{ route('home') }}" 
+       class="font-label-md text-label-md transition-colors duration-200 {{ request()->routeIs('home') ? 'active text-primary border-b-2 border-primary pb-1' : 'text-secondary hover:text-primary' }}">
+        Home
+    </a>
+
+    <a href="{{ route('download') }}" 
+       class="font-label-md text-label-md transition-colors duration-200 {{ request()->routeIs('download') ? 'active text-primary border-b-2 border-primary pb-1' : 'text-secondary hover:text-primary' }}">
+        Download Apps
+    </a>
+
+    <a href="{{ route('pricing') }}" 
+       class="font-label-md text-label-md transition-colors duration-200 {{ request()->routeIs('pricing') ? 'active text-primary border-b-2 border-primary pb-1' : 'text-secondary hover:text-primary' }}">
+        Pricing
+    </a>
 </nav>
 
 <div class="flex items-center gap-stack-md">

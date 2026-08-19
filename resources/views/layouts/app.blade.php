@@ -157,9 +157,20 @@
 <span class="text-headline-md font-headline-md font-bold text-primary">All In One Converter</span>
 </div>
 <nav class="hidden md:flex items-center gap-gutter">
-<a class="font-label-md text-label-md text-secondary hover:text-primary transition-colors duration-200" href="{{route('convert.index')}}">Converter</a>
-<a class="font-label-md text-label-md text-secondary hover:text-primary transition-colors duration-200" href="{{route('licenses')}}">My License</a>
-<a class="font-label-md text-label-md text-primary border-b-2 border-primary pb-1" href="{{route('dashboard')}}">Dashboard</a>
+    <a href="{{ route('convert.index') }}" 
+       class="font-label-md text-label-md transition-colors duration-200 {{ request()->routeIs('convert.index') ? 'active text-primary border-b-2 border-primary pb-1' : 'text-secondary hover:text-primary' }}">
+        Converter
+    </a>
+
+    <a href="{{ route('licenses') }}" 
+       class="font-label-md text-label-md transition-colors duration-200 {{ request()->routeIs('licenses') ? 'active text-primary border-b-2 border-primary pb-1' : 'text-secondary hover:text-primary' }}">
+        My License
+    </a>
+
+    <a href="{{ route('dashboard') }}" 
+       class="font-label-md text-label-md transition-colors duration-200 {{ request()->routeIs('dashboard') ? 'active text-primary border-b-2 border-primary pb-1' : 'text-secondary hover:text-primary' }}">
+        Dashboard
+    </a>
 </nav>
 <div class="flex items-center gap-stack-md">
 <a href="{{route('pricing')}}" class="bg-primary text-on-primary px-6 py-2 rounded-lg font-label-md text-label-md hover:opacity-80 transition-opacity">
