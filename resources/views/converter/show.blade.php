@@ -157,15 +157,6 @@
                     Download Converted File
                 </button>
             </div>
-
-            <!-- Promotional / Tool Suggestion -->
-            <div class="bg-surface-container-low border border-primary-fixed-dim rounded-xl p-gutter">
-                <h4 class="font-label-md text-label-md text-on-surface mb-2">Need to merge PDFs?</h4>
-                <p class="text-secondary font-body-sm text-body-sm mb-4">Combine multiple PDF documents into one seamless file with our free tool.</p>
-                <a class="text-primary font-label-md text-label-md flex items-center gap-1 hover:underline" href="#">
-                    Try PDF Merger <span class="material-symbols-outlined text-sm">arrow_forward</span>
-                </a>
-            </div>
         </div>
     </div>
 </main>

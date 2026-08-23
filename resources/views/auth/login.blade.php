@@ -57,9 +57,6 @@
 <div class="absolute inset-0 flex items-center">
 <div class="w-full border-t border-outline-variant"></div>
 </div>
-<div class="relative flex justify-center text-label-sm">
-<span class="bg-white px-4 text-on-surface-variant font-label-sm">Or continue with</span>
-</div>
 </div>
 <!-- Footer Links -->
 <div class="mt-stack-lg text-center">

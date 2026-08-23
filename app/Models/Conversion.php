@@ -59,4 +59,8 @@ class Conversion extends Model
     {
         return $this->status === ConversionStatus::Pending;
     }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

@@ -13,6 +13,7 @@ use App\Http\Controllers\LicenseController;
 use App\Http\Middleware\EnsureUserIsAdmin;
 use App\Http\Middleware\EnsureUserLoggedIn;
 use App\Http\Middleware\RedirectIfAuthenticated;
+use App\Models\Conversion;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {

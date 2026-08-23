@@ -3,6 +3,15 @@
 @section('title', 'Register')
 
 @section('content')
+@if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
 <!-- Header / Brand Section -->
 <header class="w-full flex justify-between items-center px-margin-desktop max-w-container-max mx-auto h-16">
 <div class="text-headline-md font-headline-md font-extrabold text-primary">All In One Converter</div>
@@ -29,9 +38,6 @@ Login
 <p class="font-body-md text-body-md text-on-surface-variant">Join thousands of users converting files daily with precision and speed.</p>
 </div>
 <div class="relative flex items-center mb-6">
-<div class="flex-grow border-t border-outline-variant"></div>
-<span class="flex-shrink mx-4 font-label-sm text-label-sm text-outline uppercase tracking-wider">Or continue with email</span>
-<div class="flex-grow border-t border-outline-variant"></div>
 </div>
 <!-- Form -->
 <form action="{{ route('register') }}" method="POST" class="space-y-gutter">
