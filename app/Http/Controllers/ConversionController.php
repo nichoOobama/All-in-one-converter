@@ -21,24 +21,47 @@ class ConversionController extends Controller
             ->take(10)
             ->get();
 
+        $hasUnlimited = false;
+        $activeSingleCount = 0;
+        $today = now()->startOfDay();
+        $since = $today;
         $dailyLimit = (int) config('converter.limits.per_user_daily', 7);
 
-        // conversions table currently has no user_id column (see migration 2026_07_26_000001),
-        // so we count by ip_address for both guest & auth. If user_id column exists later, use it.
-        $today = now()->startOfDay();
-        if (Auth::check() && \Illuminate\Support\Facades\Schema::hasColumn('conversions', 'user_id')) {
-            $conversionsToday = \App\Models\Conversion::where('user_id', auth()->id())
-                ->where('created_at', '>=', $today)
-                ->count();
+        if (Auth::check()) {
+            $user = auth()->user();
+            $hasUnlimited = $user->hasUnlimitedAccess();
+            $activeSingleCount = $user->activeSingleLicensesCount();
+            // Tiered limit: Single = 20, Free = 7
+            if (!$hasUnlimited) {
+                $dailyLimit = $user->hasActiveSingle()
+                    ? (int) config('converter.limits.single_daily', 20)
+                    : (int) config('converter.limits.per_user_daily', 7);
+            }
+            if (\Illuminate\Support\Facades\Schema::hasColumn('conversions', 'user_id')) {
+                $conversionsToday = \App\Models\Conversion::where('user_id', $user->id)
+                    ->where('created_at', '>=', $since)
+                    ->count();
+            } else {
+                $conversionsToday = \App\Models\Conversion::where('ip_address', request()->ip())
+                    ->where('created_at', '>=', $since)
+                    ->count();
+            }
         } else {
             $conversionsToday = \App\Models\Conversion::where('ip_address', request()->ip())
-                ->where('created_at', '>=', $today)
+                ->where('created_at', '>=', $since)
                 ->count();
         }
 
-        $remaining = max(0, $dailyLimit - $conversionsToday);
-        $usagePercent = $dailyLimit > 0 ? (int) min(100, round($conversionsToday / $dailyLimit * 100)) : 0;
-        $isLimitReached = $conversionsToday >= $dailyLimit;
+        // Subscription = unlimited, jadi tidak ada batas
+        if ($hasUnlimited) {
+            $remaining = 999;
+            $usagePercent = 0;
+            $isLimitReached = false;
+        } else {
+            $remaining = max(0, $dailyLimit - $conversionsToday);
+            $usagePercent = $dailyLimit > 0 ? (int) min(100, round($conversionsToday / $dailyLimit * 100)) : 0;
+            $isLimitReached = $conversionsToday >= $dailyLimit;
+        }
 
         return view('converter.index', [
             'formats' => $formats,
@@ -48,6 +71,8 @@ class ConversionController extends Controller
             'remaining' => $remaining,
             'usagePercent' => $usagePercent,
             'isLimitReached' => $isLimitReached,
+            'hasUnlimited' => $hasUnlimited,
+            'activeSingleCount' => $activeSingleCount,
         ]);
     }
 

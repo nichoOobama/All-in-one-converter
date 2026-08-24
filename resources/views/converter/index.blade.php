@@ -219,67 +219,121 @@
 </div>
 <!-- Secondary Options & Related Tools -->
 <div class="lg:col-span-4 flex flex-col gap-gutter">
+@php
+    $hasUnlimited = $hasUnlimited ?? false;
+    $activeSingleCount = $activeSingleCount ?? 0;
+    $canResetWithSingle = $isLimitReached && $activeSingleCount > 0 && !$hasUnlimited;
+@endphp
 <!-- Daily Limit Card - Rapi & Informatif -->
-<div class="bg-white border {{ $isLimitReached ? 'border-error/30' : 'border-outline-variant' }} rounded-xl p-stack-lg shadow-sm">
+<div class="bg-white border {{ $hasUnlimited ? 'border-primary/20' : ($canResetWithSingle ? 'border-amber-300' : ($isLimitReached ? 'border-error/30' : 'border-outline-variant')) }} rounded-xl p-stack-lg shadow-sm">
     <div class="flex items-center justify-between mb-stack-sm">
         <h3 class="font-label-md text-on-surface flex items-center gap-2">
-            <span class="material-symbols-outlined text-[20px] {{ $isLimitReached ? 'text-error' : 'text-primary' }}">{{ $isLimitReached ? 'block' : 'pie_chart' }}</span>
-            Penggunaan Harian
+            <span class="material-symbols-outlined text-[20px] {{ $hasUnlimited ? 'text-primary' : ($canResetWithSingle ? 'text-amber-600' : ($isLimitReached ? 'text-error' : 'text-primary')) }}">{{ $hasUnlimited ? 'all_inclusive' : ($canResetWithSingle ? 'restart_alt' : ($isLimitReached ? 'block' : 'pie_chart')) }}</span>
+            Daily Usage
         </h3>
-        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium {{ $isLimitReached ? 'bg-error-container text-on-error-container' : 'bg-primary-container/10 text-primary border border-primary/10' }}">
-            <span class="w-1.5 h-1.5 rounded-full {{ $isLimitReached ? 'bg-error' : 'bg-primary' }} animate-pulse"></span>
-            Free • {{ $dailyLimit }}/hari
-        </span>
+        @if($hasUnlimited)
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium bg-primary text-on-primary">
+                <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                Subscription • Unlimited
+            </span>
+        @else
+            @php $tierLabel = $activeSingleCount > 0 ? 'Single' : 'Free'; @endphp
+            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium {{ $canResetWithSingle ? 'bg-amber-100 text-amber-800 border border-amber-200' : ($isLimitReached ? 'bg-error-container text-on-error-container' : 'bg-primary-container/10 text-primary border border-primary/10') }}">
+                <span class="w-1.5 h-1.5 rounded-full {{ $canResetWithSingle ? 'bg-amber-600' : ($isLimitReached ? 'bg-error' : 'bg-primary') }} animate-pulse"></span>
+                {{ $tierLabel }} • {{ $dailyLimit }}/hari
+            </span>
+        @endif
     </div>
 
-    {{-- Angka utama --}}
-    <div class="flex items-baseline justify-between mb-stack-sm">
-        <div class="flex items-baseline gap-1">
-            <span class="text-[28px] font-bold leading-none {{ $isLimitReached ? 'text-error' : 'text-on-surface' }}">{{ $conversionsToday }}</span>
-            <span class="text-body-sm text-secondary">/ {{ $dailyLimit }} terpakai</span>
+    @if(session('single_reset_used'))
+        <div class="mb-stack-sm p-2.5 rounded-lg bg-green-50 border border-green-200 flex gap-2">
+            <span class="material-symbols-outlined text-green-600 text-[16px] mt-0.5">check_circle</span>
+            <p class="text-label-sm text-green-800">{{ session('single_reset_used') }}</p>
         </div>
-        <span class="font-label-md {{ $remaining === 0 ? 'text-error' : ($remaining <= 2 ? 'text-amber-600' : 'text-primary') }}">
-            Sisa {{ $remaining }}
-        </span>
-    </div>
+    @endif
 
-    {{-- Progress bar --}}
-    <div class="h-2 w-full bg-surface-container rounded-full overflow-hidden mb-stack-sm">
-        <div class="h-full rounded-full transition-all duration-500 {{ $isLimitReached ? 'bg-error' : ($usagePercent >= 80 ? 'bg-amber-500' : 'bg-primary') }}" style="width: {{ $usagePercent }}%"></div>
-    </div>
-
-    <div class="flex items-center justify-between">
+    @if($hasUnlimited)
+        <div class="flex items-center gap-3 mb-stack-sm">
+            <span class="text-[28px] font-bold leading-none text-primary">∞</span>
+            <span class="text-body-sm text-secondary">Unlimited — Subscription actived</span>
+        </div>
+        <div class="h-2 w-full bg-primary/10 rounded-full overflow-hidden mb-stack-sm">
+            <div class="h-full bg-primary" style="width: 100%"></div>
+        </div>
         <p class="text-label-sm text-secondary flex items-center gap-1.5">
-            <span class="material-symbols-outlined text-[14px]">schedule</span>
-            Reset jam 00:00 WIB
+            <span class="material-symbols-outlined text-[14px] text-primary">verified</span>
+            There is no limit. Thank you for subscribing!
         </p>
-        <p class="text-label-sm {{ $isLimitReached ? 'text-error font-medium' : 'text-secondary' }}">
-            {{ $usagePercent }}% terpakai
-        </p>
-    </div>
-
-    @if($isLimitReached)
-        <div class="mt-stack-md p-3 rounded-lg bg-error-container/50 border border-error/20 flex gap-2">
-            <span class="material-symbols-outlined text-error text-[18px] mt-0.5">warning</span>
-            <div class="flex-1">
-                <p class="text-label-sm font-medium text-on-error-container">Batas harian tercapai</p>
-                <p class="text-label-sm text-secondary mt-0.5">Upgrade untuk konversi tanpa batas atau tunggu reset besok.</p>
+    @else
+        {{-- Angka utama --}}
+        <div class="flex items-baseline justify-between mb-stack-sm">
+            <div class="flex items-baseline gap-1">
+                <span class="text-[28px] font-bold leading-none {{ $isLimitReached && !$canResetWithSingle ? 'text-error' : 'text-on-surface' }}">{{ $conversionsToday }}</span>
+                <span class="text-body-sm text-secondary">/ {{ $dailyLimit }} used</span>
             </div>
+            <span class="font-label-md {{ $canResetWithSingle ? 'text-amber-600' : ($remaining === 0 ? 'text-error' : ($remaining <= 2 ? 'text-amber-600' : 'text-primary')) }}">
+                {{ $remaining }} remaining
+            </span>
         </div>
-        <a href="{{ route('pricing') }}" class="mt-stack-sm w-full inline-flex items-center justify-center gap-2 bg-primary text-on-primary px-4 py-2.5 rounded-lg font-label-md text-sm hover:opacity-90 transition-opacity">
-            <span class="material-symbols-outlined text-[16px]">diamond</span> Lihat Paket Pro
-        </a>
-    @elseif($remaining <= 2 && $remaining > 0)
-        <div class="mt-stack-md p-3 rounded-lg bg-amber-50 border border-amber-200 flex gap-2">
-            <span class="material-symbols-outlined text-amber-600 text-[18px] mt-0.5">info</span>
-            <p class="text-label-sm text-amber-800">Sisa {{ $remaining }} lagi hari ini. <a href="{{ route('pricing') }}" class="underline font-medium hover:text-amber-900">Upgrade untuk unlimited →</a></p>
+
+        {{-- Progress bar --}}
+        <div class="h-2 w-full bg-surface-container rounded-full overflow-hidden mb-stack-sm">
+            <div class="h-full rounded-full transition-all duration-500 {{ $canResetWithSingle ? 'bg-amber-500' : ($isLimitReached ? 'bg-error' : ($usagePercent >= 80 ? 'bg-amber-500' : 'bg-primary')) }}" style="width: {{ $usagePercent }}%"></div>
         </div>
+
+        <div class="flex items-center justify-between">
+            <p class="text-label-sm text-secondary flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[14px]">schedule</span>
+                Reset at 00:00 WIB
+            </p>
+            <p class="text-label-sm {{ $isLimitReached && !$canResetWithSingle ? 'text-error font-medium' : 'text-secondary' }}">
+                {{ $usagePercent }}% used
+            </p>
+        </div>
+{{-- 
+        @if($activeSingleCount > 0)
+            <div class="mt-stack-sm flex items-center gap-1.5 text-label-sm {{ $canResetWithSingle ? 'text-amber-700 font-medium' : 'text-secondary' }}">
+                <span class="material-symbols-outlined text-[16px]">confirmation_number</span>
+                Single siap reset: {{ $activeSingleCount }} lisensi — tiap lisensi mereset ke <b>20/hari</b> (bukan unlimited)
+            </div>
+        @endif --}}
+
+        @if($canResetWithSingle)
+            <div class="mt-stack-md p-3 rounded-lg bg-amber-50 border border-amber-200 flex gap-2">
+                <span class="material-symbols-outlined text-amber-600 text-[18px] mt-0.5">restart_alt</span>
+                <div class="flex-1">
+                    <p class="text-label-sm font-medium text-amber-900">Usage limit reached!</p>
+                    {{-- <p class="text-label-sm text-amber-800 mt-0.5">Konversi berikutnya akan <b>otomatis memakai 1 lisensi Single</b> untuk mereset limit ke <b>20/hari</b> ({{ $activeSingleCount }} tersisa).</p> --}}
+                </div>
+            </div>
+        @elseif($isLimitReached)
+            <div class="mt-stack-md p-3 rounded-lg bg-error-container/50 border border-error/20 flex gap-2">
+                <span class="material-symbols-outlined text-error text-[18px] mt-0.5">warning</span>
+                <div class="flex-1">
+                    <p class="text-label-sm font-medium text-on-error-container">Batas harian tercapai ({{ $dailyLimit }}/hari)</p>
+                    <p class="text-label-sm text-secondary mt-0.5">Single = <b>20/hari</b> (1x reset, bukan unlimited). Beli Single untuk 20/hari, atau Subscription untuk unlimited.</p>
+                </div>
+            </div>
+            <div class="mt-stack-sm grid grid-cols-2 gap-2">
+                <a href="{{ route('checkout', 'single') }}" class="inline-flex items-center justify-center gap-1.5 border border-amber-300 bg-amber-50 text-amber-800 px-3 py-2.5 rounded-lg font-label-md text-sm hover:bg-amber-100 transition-colors">
+                    <span class="material-symbols-outlined text-[16px]">restart_alt</span> Beli Single (20/hari)
+                </a>
+                <a href="{{ route('checkout', 'subscription') }}" class="inline-flex items-center justify-center gap-1.5 bg-primary text-on-primary px-3 py-2.5 rounded-lg font-label-md text-sm hover:opacity-90 transition-opacity">
+                    <span class="material-symbols-outlined text-[16px]">diamond</span> Unlimited
+                </a>
+            </div>
+        @elseif($remaining <= 2 && $remaining > 0)
+            <div class="mt-stack-md p-3 rounded-lg bg-amber-50 border border-amber-200 flex gap-2">
+                <span class="material-symbols-outlined text-amber-600 text-[18px] mt-0.5">info</span>
+                <p class="text-label-sm text-amber-800">Sisa {{ $remaining }} lagi ({{ $dailyLimit }}/hari). Single = 20/hari, Subscription = unlimited. <a href="{{ route('pricing') }}" class="underline font-medium hover:text-amber-900">Lihat paket →</a></p>
+            </div>
+        @endif
     @endif
 
     @if(!Auth::check())
         <p class="mt-stack-sm text-[11px] leading-4 text-secondary bg-surface-container/50 border border-outline-variant/50 rounded-lg px-3 py-2 flex gap-1.5">
             <span class="material-symbols-outlined text-[14px] mt-0.5">info</span>
-            <span>Belum login? Limit dihitung <b>per IP</b> ({{ request()->ip() }}). <a href="{{ route('login') }}" class="text-primary underline font-medium">Login</a> untuk tracking lebih akurat.</span>
+            <span>Belum login? Limit dihitung <b>per IP</b> ({{ request()->ip() }}). <a href="{{ route('login') }}" class="text-primary underline font-medium">Login</a> untuk tracking & pakai lisensi.</span>
         </p>
     @endif
 </div>
@@ -352,9 +406,12 @@
     </optgroup>
 </select>
 
-    <button type="submit" @if($isLimitReached) disabled @endif class="px-6 py-3 rounded-lg font-label-md text-sm whitespace-nowrap transition-all flex items-center justify-center gap-1.5 {{ $isLimitReached ? 'bg-surface-container text-secondary cursor-not-allowed border border-outline-variant' : 'bg-primary text-on-primary hover:shadow-lg active:scale-95' }}">
-                    @if($isLimitReached)
+    @php $canConvert = $hasUnlimited || !$isLimitReached || $canResetWithSingle; @endphp
+    <button type="submit" @if(!$canConvert) disabled @endif class="px-6 py-3 rounded-lg font-label-md text-sm whitespace-nowrap transition-all flex items-center justify-center gap-1.5 {{ !$canConvert ? 'bg-surface-container text-secondary cursor-not-allowed border border-outline-variant' : 'bg-primary text-on-primary hover:shadow-lg active:scale-95' }}">
+                    @if(!$canConvert)
                         <span class="material-symbols-outlined text-[16px]">block</span> Limit Habis
+                    @elseif($canResetWithSingle)
+                        <span class="material-symbols-outlined text-[16px]">restart_alt</span> Convert (pakai Single)
                     @else
                         Convert
                     @endif
@@ -362,8 +419,8 @@
 </form>
 </div>
 </div>
-        @if($isLimitReached)
-        <p class="text-label-sm text-error mt-2 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">error</span> Batas 7 konversi/hari tercapai. Coba lagi besok atau upgrade.</p>
+        @if($isLimitReached && !$canResetWithSingle && !$hasUnlimited)
+        <p class="text-label-sm text-error mt-2 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">error</span> Batas {{ $dailyLimit }} konversi/hari tercapai. Single = 20/hari (1x reset), Subscription unlimited.</p>
         @endif
 </div>
 </div>

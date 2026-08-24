@@ -90,22 +90,39 @@ class ConversionService
 
     private function checkDailyConversionLimit(): void
     {
-        $limit = config('converter.limits.per_user_daily');
+        // Subscription = unlimited
+        if (Auth::check() && auth()->user()->hasUnlimitedAccess()) {
+            return;
+        }
+
+        // Tiered limit: Free 7, Single 20
+        $limit = (int) config('converter.limits.per_user_daily', 7);
+        if (Auth::check() && auth()->user()->hasActiveSingle()) {
+            $limit = (int) config('converter.limits.single_daily', 20);
+        }
+
         $today = now()->startOfDay();
+        $since = $today;
 
         if (Auth::check() && \Illuminate\Support\Facades\Schema::hasColumn('conversions', 'user_id')) {
             $count = Conversion::where('user_id', Auth::id())
-                ->where('created_at', '>=', $today)
+                ->where('created_at', '>=', $since)
                 ->count();
         } else {
             $ip = request()->ip();
             $count = Conversion::where('ip_address', $ip)
-                ->where('created_at', '>=', $today)
+                ->where('created_at', '>=', $since)
                 ->count();
         }
 
         if ($count >= $limit) {
-            throw new DailyConversionLimitExceeded();
+            $msg = 'Batas harian ' . $limit . ' konversi tercapai. ';
+            if ($limit === 7) {
+                $msg .= 'Beli Single (20/hari) atau Subscription (unlimited) untuk lanjut.';
+            } else {
+                $msg .= 'Single = 20/hari (bukan unlimited). Beli Subscription untuk unlimited.';
+            }
+            throw new DailyConversionLimitExceeded($msg);
         }
     }
 }

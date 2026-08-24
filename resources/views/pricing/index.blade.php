@@ -33,7 +33,7 @@
 <ul class="flex-grow space-y-stack-sm mb-stack-lg">
 <li class="flex items-start gap-stack-sm font-body-sm text-body-sm text-on-surface">
 <span class="material-symbols-outlined text-primary text-[20px]" data-icon="check_circle">check_circle</span>
-                        5 conversions per day
+                        7 conversions per day
                     </li>
 <li class="flex items-start gap-stack-sm font-body-sm text-body-sm text-on-surface">
 <span class="material-symbols-outlined text-primary text-[20px]" data-icon="check_circle">check_circle</span>
@@ -60,8 +60,8 @@
 </div>
 <ul class="flex-grow space-y-stack-sm mb-stack-lg">
 <li class="flex items-start gap-stack-sm font-body-sm text-body-sm text-on-surface">
-<span class="material-symbols-outlined text-primary text-[20px]" data-icon="check_circle">check_circle</span>
-                Unlimited Conversions
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="restart_alt">restart_alt</span>
+                <span><strong>20 konversi / hari</strong> — reset harian, bukan unlimited</span>
                     </li>
 <li class="flex items-start gap-stack-sm font-body-sm text-body-sm text-on-surface">
 <span class="material-symbols-outlined text-primary text-[20px]" data-icon="check_circle">check_circle</span>
@@ -130,15 +130,15 @@
 <tr class="bg-surface-container-low border-b border-outline-variant">
 <th class="p-stack-md font-label-md text-label-md text-on-surface">Features</th>
 <th class="p-stack-md font-label-md text-label-md text-on-surface">Free</th>
-<th class="p-stack-md font-label-md text-label-md text-on-surface">Pro</th>
-<th class="p-stack-md font-label-md text-label-md text-on-surface">Enterprise</th>
+<th class="p-stack-md font-label-md text-label-md text-on-surface">Single Purchase</th>
+<th class="p-stack-md font-label-md text-label-md text-on-surface">Subscription</th>
 </tr>
 </thead>
 <tbody class="divide-y divide-outline-variant">
 <tr>
 <td class="p-stack-md font-body-sm text-body-sm font-semibold">Daily Conversions</td>
-<td class="p-stack-md font-body-sm text-body-sm">5 per day</td>
-<td class="p-stack-md font-body-sm text-body-sm font-bold text-primary">Unlimited</td>
+<td class="p-stack-md font-body-sm text-body-sm">7 per day</td>
+<td class="p-stack-md font-body-sm text-body-sm font-bold">20 per day</td>
 <td class="p-stack-md font-body-sm text-body-sm font-bold text-primary">Unlimited</td>
 </tr>
 <tr>
