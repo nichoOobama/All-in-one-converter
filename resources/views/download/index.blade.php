@@ -19,9 +19,9 @@
 <a class="bg-primary text-on-primary px-8 py-4 rounded-lg font-label-md text-label-md flex items-center shadow-lg hover:opacity-90 transition-all" href="/downloads/windows/setup.exe">
 <span class="material-symbols-outlined mr-2">desktop_windows</span> Download for Windows
                     </a>
-<a class="border border-outline text-on-surface px-8 py-4 rounded-lg font-label-md text-label-md flex items-center hover:bg-surface-variant transition-all" href="/downloads/android/app.apk">
+{{-- <a class="border border-outline text-on-surface px-8 py-4 rounded-lg font-label-md text-label-md flex items-center hover:bg-surface-variant transition-all" href="/downloads/android/app.apk">
 <span class="material-symbols-outlined mr-2">smartphone</span> Mobile Apps
-                    </a>
+                    </a> --}}
 </div>
 </div>
 <div class="relative">
@@ -108,7 +108,7 @@
 </div>
 </section>
 <!-- Mobile Apps Section -->
-<section class="bg-surface-container rounded-3xl p-stack-lg md:p-16 scroll-mt-24" id="mobile">
+{{-- <section class="bg-surface-container rounded-3xl p-stack-lg md:p-16 scroll-mt-24" id="mobile">
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 <div class="space-y-stack-md">
 <h2 class="font-headline-lg text-headline-lg text-on-surface">On the Go Productivity</h2>
@@ -144,59 +144,6 @@
 <img class="max-w-md w-full drop-shadow-2xl" data-alt="A stunning 3D isometric mockup of two high-end smartphones floating in space. One phone shows the 'All In One Converter' app interface with a large 'Select Files' button and several conversion icon categories (PDF, Image, Video). The second phone shows a successful conversion screen with a checkmark. The overall aesthetic is clean, professional, and uses Primary Blue accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxQtSUOoS_meaIpHZjgLpkxDrdNDdJ23ZVZJYV0pZw2wnFRSrkfxpiVQAnZBk2Ug1NZKUruIzfIiVdYfWuByqJlN2A11Qatlc8H3MhMmh_RLsJsoQX8-EvlnpQilG2zRPMCnJNdoIIJubB7h2zukcd33DSbkhiz5yJLOH8lARERhjjT7elm80aqV37oEPh6_NKMP1-RBdtrmWPv7jXUZJePJ-GMzaNLv9vSqjqVVEN7RgxvyP-eeQw"/>
 </div>
 </div>
-</section>
+</section> --}}
 </main>
-{{--<h1>Download Native Apps</h1>
-
-<p>Download our cross-platform application for offline file conversion. Available for Windows and Android.</p>
-
-<hr>
-
-<h2>Windows Desktop App</h2>
-<p>A powerful desktop application for Windows that allows you to convert files offline without internet connection.</p>
-
-<ul>
-    <li>Convert images, videos, audio, and documents</li>
-    <li>Batch conversion support</li>
-    <li>Fast processing with local engine</li>
-    <li>No file upload needed - everything stays on your computer</li>
-</ul>
-
-<a href="/downloads/windows/setup.exe">
-    <button type="button">Download for Windows</button>
-</a>
-
-<p><strong>Requirements:</strong> Windows 10 or later, 4GB RAM, 500MB free disk space</p>
-
-<hr>
-
-<h2>Android App</h2>
-<p>Convert files directly from your Android phone. Perfect for quick conversions on the go.</p>
-
-<ul>
-    <li>Support all major file formats</li>
-    <li>Share converted files directly</li>
-    <li>Offline conversion support</li>
-    <li>Lightweight and fast</li>
-</ul>
-
-<a href="">
-    <button type="button">Download APK for Android</button>
-</a>
-
-<p><strong>Requirements:</strong> Android 8.0 or later, 100MB free storage</p>
-
-<hr>
-
-<h2>License Activation</h2>
-<p>To unlock all features in the native apps, you need a license key.</p>
-<ol>
-    <li>Create an account or login</li>
-    <li>Purchase a license from <a href="{{ route('pricing') }}">Pricing page</a></li>
-    <li>Copy your license key from <a href="{{ route('licenses') }}">My Licenses</a></li>
-    <li>Enter the key in the native app settings</li>
-</ol>
-
-<p><strong>Free features:</strong> Limited conversions per day</p>
-<p><strong>Pro features:</strong> Unlimited conversions, batch processing, priority support</p> --}}
 @endsection
