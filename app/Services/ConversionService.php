@@ -39,7 +39,7 @@ class ConversionService
 
             $this->validator->validate($dto);
 
-            $conversion = Conversion::create([
+            $data = [
                 'uuid' => (string) Str::uuid(),
                 'source_filename' => $file->getClientOriginalName(),
                 'source_mime_type' => mime_content_type($file->getRealPath()),
@@ -50,7 +50,12 @@ class ConversionService
                 'status' => ConversionStatus::Pending,
                 'options' => $options,
                 'ip_address' => request()->ip(),
-            ]);
+            ];
+            // store user_id only if column exists (migrasi belum jalan, hindari error)
+            if (\Illuminate\Support\Facades\Schema::hasColumn('conversions', 'user_id') && Auth::check()) {
+                $data['user_id'] = Auth::id();
+            }
+            $conversion = Conversion::create($data);
 
             $conversionId = $conversion->id;
 
@@ -88,23 +93,19 @@ class ConversionService
         $limit = config('converter.limits.per_user_daily');
         $today = now()->startOfDay();
 
-        if (Auth::check()) {
-            $count = auth()->user()->conversions()
+        if (Auth::check() && \Illuminate\Support\Facades\Schema::hasColumn('conversions', 'user_id')) {
+            $count = Conversion::where('user_id', Auth::id())
                 ->where('created_at', '>=', $today)
                 ->count();
-
-            if ($count >= $limit) {
-                throw new DailyConversionLimitExceeded();
-            }
         } else {
             $ip = request()->ip();
             $count = Conversion::where('ip_address', $ip)
                 ->where('created_at', '>=', $today)
                 ->count();
+        }
 
-            if ($count >= $limit) {
-                throw new DailyConversionLimitExceeded();
-            }
+        if ($count >= $limit) {
+            throw new DailyConversionLimitExceeded();
         }
     }
 }

@@ -23,13 +23,16 @@ class ConversionController extends Controller
 
         $dailyLimit = (int) config('converter.limits.per_user_daily', 7);
 
-        if (Auth::check()) {
-            $conversionsToday = auth()->user()->conversions()
-                ->where('created_at', '>=', now()->startOfDay())
+        // conversions table currently has no user_id column (see migration 2026_07_26_000001),
+        // so we count by ip_address for both guest & auth. If user_id column exists later, use it.
+        $today = now()->startOfDay();
+        if (Auth::check() && \Illuminate\Support\Facades\Schema::hasColumn('conversions', 'user_id')) {
+            $conversionsToday = \App\Models\Conversion::where('user_id', auth()->id())
+                ->where('created_at', '>=', $today)
                 ->count();
         } else {
             $conversionsToday = \App\Models\Conversion::where('ip_address', request()->ip())
-                ->where('created_at', '>=', now()->startOfDay())
+                ->where('created_at', '>=', $today)
                 ->count();
         }
 

@@ -11,6 +11,7 @@ class Conversion extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        'user_id',
         'uuid',
         'source_filename',
         'source_mime_type',
