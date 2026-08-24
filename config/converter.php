@@ -11,7 +11,7 @@ return array (
   ),
   'limits' => 
   array (
-    'per_user_daily' => 50,
+    'per_user_daily' => 7,
     'max_file_size_mb' => 2048,
   ),
   'drivers' => 

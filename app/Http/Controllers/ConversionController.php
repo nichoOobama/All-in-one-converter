@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\ConversionService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ConversionController extends Controller
 {
@@ -20,9 +21,30 @@ class ConversionController extends Controller
             ->take(10)
             ->get();
 
+        $dailyLimit = (int) config('converter.limits.per_user_daily', 7);
+
+        if (Auth::check()) {
+            $conversionsToday = auth()->user()->conversions()
+                ->where('created_at', '>=', now()->startOfDay())
+                ->count();
+        } else {
+            $conversionsToday = \App\Models\Conversion::where('ip_address', request()->ip())
+                ->where('created_at', '>=', now()->startOfDay())
+                ->count();
+        }
+
+        $remaining = max(0, $dailyLimit - $conversionsToday);
+        $usagePercent = $dailyLimit > 0 ? (int) min(100, round($conversionsToday / $dailyLimit * 100)) : 0;
+        $isLimitReached = $conversionsToday >= $dailyLimit;
+
         return view('converter.index', [
             'formats' => $formats,
             'recentConversions' => $recentConversions,
+            'conversionsToday' => $conversionsToday,
+            'dailyLimit' => $dailyLimit,
+            'remaining' => $remaining,
+            'usagePercent' => $usagePercent,
+            'isLimitReached' => $isLimitReached,
         ]);
     }
 
@@ -50,6 +72,8 @@ class ConversionController extends Controller
             return back()->withErrors(['target_format' => $e->getMessage()])->withInput();
         } catch (\App\Exceptions\UnsupportedFormatException $e) {
             return back()->withErrors(['target_format' => $e->getMessage()])->withInput();
+        } catch (\App\Exceptions\DailyConversionLimitExceeded $e) {
+            return back()->withErrors(['file' => $e->getMessage()])->withInput();
         } catch (\Exception $e) {
             return back()->withErrors(['file' => 'Conversion failed: ' . $e->getMessage()])->withInput();
         }

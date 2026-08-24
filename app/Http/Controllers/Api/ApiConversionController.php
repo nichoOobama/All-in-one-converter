@@ -40,6 +40,11 @@ class ApiConversionController extends Controller
                 ],
             ], 201);
 
+        } catch (\App\Exceptions\DailyConversionLimitExceeded $e) {
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 429);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,

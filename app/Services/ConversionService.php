@@ -10,6 +10,7 @@ use App\Enums\ConversionStatus;
 use App\Events\ConversionCompleted;
 use App\Events\ConversionFailed;
 use App\Events\ConversionStarted;
+use App\Exceptions\DailyConversionLimitExceeded;
 use App\Exceptions\FileTooLargeException;
 use App\Exceptions\SameFormatException;
 use App\Exceptions\UnsupportedFormatException;
@@ -17,6 +18,7 @@ use App\Jobs\ConvertFileJob;
 use App\Models\Conversion;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Auth;
 
 class ConversionService
 {
@@ -29,6 +31,8 @@ class ConversionService
     public function convert(UploadedFile $file, string $targetFormat, array $options = []): Conversion
     {
         $conversionId = null;
+
+        $this->checkDailyConversionLimit();
 
         try {
             $dto = ConversionRequest::fromUpload($file, $targetFormat, $options);
@@ -77,5 +81,30 @@ class ConversionService
     public function getSupportedFormats(): array
     {
         return config('converter.formats', []);
+    }
+
+    private function checkDailyConversionLimit(): void
+    {
+        $limit = config('converter.limits.per_user_daily');
+        $today = now()->startOfDay();
+
+        if (Auth::check()) {
+            $count = auth()->user()->conversions()
+                ->where('created_at', '>=', $today)
+                ->count();
+
+            if ($count >= $limit) {
+                throw new DailyConversionLimitExceeded();
+            }
+        } else {
+            $ip = request()->ip();
+            $count = Conversion::where('ip_address', $ip)
+                ->where('created_at', '>=', $today)
+                ->count();
+
+            if ($count >= $limit) {
+                throw new DailyConversionLimitExceeded();
+            }
+        }
     }
 }

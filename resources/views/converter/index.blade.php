@@ -219,12 +219,77 @@
 </div>
 <!-- Secondary Options & Related Tools -->
 <div class="lg:col-span-4 flex flex-col gap-gutter">
+<!-- Daily Limit Card - Rapi & Informatif -->
+<div class="bg-white border {{ $isLimitReached ? 'border-error/30' : 'border-outline-variant' }} rounded-xl p-stack-lg shadow-sm">
+    <div class="flex items-center justify-between mb-stack-sm">
+        <h3 class="font-label-md text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-[20px] {{ $isLimitReached ? 'text-error' : 'text-primary' }}">{{ $isLimitReached ? 'block' : 'pie_chart' }}</span>
+            Penggunaan Harian
+        </h3>
+        <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium {{ $isLimitReached ? 'bg-error-container text-on-error-container' : 'bg-primary-container/10 text-primary border border-primary/10' }}">
+            <span class="w-1.5 h-1.5 rounded-full {{ $isLimitReached ? 'bg-error' : 'bg-primary' }} animate-pulse"></span>
+            Free • {{ $dailyLimit }}/hari
+        </span>
+    </div>
+
+    {{-- Angka utama --}}
+    <div class="flex items-baseline justify-between mb-stack-sm">
+        <div class="flex items-baseline gap-1">
+            <span class="text-[28px] font-bold leading-none {{ $isLimitReached ? 'text-error' : 'text-on-surface' }}">{{ $conversionsToday }}</span>
+            <span class="text-body-sm text-secondary">/ {{ $dailyLimit }} terpakai</span>
+        </div>
+        <span class="font-label-md {{ $remaining === 0 ? 'text-error' : ($remaining <= 2 ? 'text-amber-600' : 'text-primary') }}">
+            Sisa {{ $remaining }}
+        </span>
+    </div>
+
+    {{-- Progress bar --}}
+    <div class="h-2 w-full bg-surface-container rounded-full overflow-hidden mb-stack-sm">
+        <div class="h-full rounded-full transition-all duration-500 {{ $isLimitReached ? 'bg-error' : ($usagePercent >= 80 ? 'bg-amber-500' : 'bg-primary') }}" style="width: {{ $usagePercent }}%"></div>
+    </div>
+
+    <div class="flex items-center justify-between">
+        <p class="text-label-sm text-secondary flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[14px]">schedule</span>
+            Reset jam 00:00 WIB
+        </p>
+        <p class="text-label-sm {{ $isLimitReached ? 'text-error font-medium' : 'text-secondary' }}">
+            {{ $usagePercent }}% terpakai
+        </p>
+    </div>
+
+    @if($isLimitReached)
+        <div class="mt-stack-md p-3 rounded-lg bg-error-container/50 border border-error/20 flex gap-2">
+            <span class="material-symbols-outlined text-error text-[18px] mt-0.5">warning</span>
+            <div class="flex-1">
+                <p class="text-label-sm font-medium text-on-error-container">Batas harian tercapai</p>
+                <p class="text-label-sm text-secondary mt-0.5">Upgrade untuk konversi tanpa batas atau tunggu reset besok.</p>
+            </div>
+        </div>
+        <a href="{{ route('pricing') }}" class="mt-stack-sm w-full inline-flex items-center justify-center gap-2 bg-primary text-on-primary px-4 py-2.5 rounded-lg font-label-md text-sm hover:opacity-90 transition-opacity">
+            <span class="material-symbols-outlined text-[16px]">diamond</span> Lihat Paket Pro
+        </a>
+    @elseif($remaining <= 2 && $remaining > 0)
+        <div class="mt-stack-md p-3 rounded-lg bg-amber-50 border border-amber-200 flex gap-2">
+            <span class="material-symbols-outlined text-amber-600 text-[18px] mt-0.5">info</span>
+            <p class="text-label-sm text-amber-800">Sisa {{ $remaining }} lagi hari ini. <a href="{{ route('pricing') }}" class="underline font-medium hover:text-amber-900">Upgrade untuk unlimited →</a></p>
+        </div>
+    @endif
+
+    @if(!Auth::check())
+        <p class="mt-stack-sm text-[11px] leading-4 text-secondary bg-surface-container/50 border border-outline-variant/50 rounded-lg px-3 py-2 flex gap-1.5">
+            <span class="material-symbols-outlined text-[14px] mt-0.5">info</span>
+            <span>Belum login? Limit dihitung <b>per IP</b> ({{ request()->ip() }}). <a href="{{ route('login') }}" class="text-primary underline font-medium">Login</a> untuk tracking lebih akurat.</span>
+        </p>
+    @endif
+</div>
+
 <!-- Conversion Settings Card -->
 <div class="bg-white border border-outline-variant rounded-xl p-stack-lg shadow-sm">
 <h3 class="font-label-md text-on-surface mb-stack-md flex items-center gap-2">
 <span class="material-symbols-outlined text-[20px]">settings</span>
-                            Conversion Settings
-                        </h3>
+            Conversion Settings
+        </h3>
 <div class="space-y-stack-md">
 <div>
 <label class="block text-label-sm text-secondary mb-stack-sm">Layout Recognition</label>
@@ -287,10 +352,19 @@
     </optgroup>
 </select>
 
-    <button type="submit" class="bg-primary text-on-primary px-10 py-4 rounded-lg font-headline-md text-body-md hover:shadow-lg transform transition-all active:scale-95">Convert</button>
+    <button type="submit" @if($isLimitReached) disabled @endif class="px-6 py-3 rounded-lg font-label-md text-sm whitespace-nowrap transition-all flex items-center justify-center gap-1.5 {{ $isLimitReached ? 'bg-surface-container text-secondary cursor-not-allowed border border-outline-variant' : 'bg-primary text-on-primary hover:shadow-lg active:scale-95' }}">
+                    @if($isLimitReached)
+                        <span class="material-symbols-outlined text-[16px]">block</span> Limit Habis
+                    @else
+                        Convert
+                    @endif
+                </button>
 </form>
 </div>
 </div>
+        @if($isLimitReached)
+        <p class="text-label-sm text-error mt-2 flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">error</span> Batas 7 konversi/hari tercapai. Coba lagi besok atau upgrade.</p>
+        @endif
 </div>
 </div>
 
